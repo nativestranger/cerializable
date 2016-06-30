@@ -1,10 +1,8 @@
-Cerializable
-==
+= Cerializable
 
 Cerializable provides flexible custom serialization for Rails models.
 
-How To Use
---
+HOW TO USE
 
 Call 'acts_as_cerializable' in the models you wish to use Cerializable with.
 
@@ -42,6 +40,5 @@ If you wish, you can specify the serializer module to use:
 
 
 TODO:
---
 
 * Support #to_xml
