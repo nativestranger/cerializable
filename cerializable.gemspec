@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = Cerializable::VERSION
   s.authors     = ["Eric Arnold"]
   s.email       = ["eric.ed.arnold@gmail.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Cerializable."
-  s.description = "TODO: Description of Cerializable."
+  s.homepage    = "https://github.com/nativestranger/cerializable"
+  s.summary     = "Flexible custom serialization for Rails models"
+  s.description = "Flexible custom serialization for Rails models."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
