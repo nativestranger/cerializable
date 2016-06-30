@@ -7,16 +7,16 @@ How To Use
 --
 
 Call 'acts_as_cerializable' in the models you wish to use Cerializable with.
-```` ruby
+```ruby
 class Comment < ApplicationRecord
   acts_as_cerializable
 end
-````
+```
 
 Define corresponding serializer modules.
 
 
-```` ruby
+```ruby
 module CommentSerializer
 
   include ActionView::Helpers::DateHelper
@@ -32,7 +32,7 @@ module CommentSerializer
   end
 
 end
-````
+```
 
 The only requirement is that the 'run' method accepts two arguments and returns a hash which details how any given instance of your model is to be represented in JSON.
 
@@ -40,11 +40,11 @@ Pass custom options to #as_json, #to_json, or #serializable_hash and your models
 
 If you wish, you can specify the serializer module to use:
 
-```` ruby
+```ruby
 class Comment < ApplicationRecord
   acts_as_cerializable serialize_with: SomeSerializerModule
 end
-````
+```
 
 
 TODO:
