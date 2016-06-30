@@ -8,36 +8,27 @@ How To Use
 
 Call 'acts_as_cerializable' in the models you wish to use Cerializable with.
 
-```ruby
-
-class Comment < ApplicationRecord
-  acts_as_cerializable
-end
-
-```
+    class Comment < ApplicationRecord
+      acts_as_cerializable
+    end
 
 Define corresponding serializer modules.
 
+    module CommentSerializer
 
-```ruby
+      include ActionView::Helpers::DateHelper
 
-module CommentSerializer
+      def run(comment, options)
+        { id: comment.id,
+          user: { id: comment.user.id,
+                  name: comment.user.name },
+          body: comment.body,
+          ancestorCount: comment.ancestor_count,
+          childComments: options[:children] || comment.child_comments.order(id: :desc).map { |c| c.serializable_hash },
+          createdAtInWords: "#{ time_ago_in_words(comment.created_at) } ago" }
+      end
 
-  include ActionView::Helpers::DateHelper
-
-  def run(comment, options)
-    { id: comment.id,
-      user: { id: comment.user.id,
-              name: comment.user.name },
-      body: comment.body,
-      ancestorCount: comment.ancestor_count,
-      childComments: options[:children] || comment.child_comments.order(id: :desc).map { |c| c.serializable_hash },
-      createdAtInWords: "#{ time_ago_in_words(comment.created_at) } ago" }
-  end
-
-end
-
-```
+    end
 
 The only requirement is that the 'run' method accepts two arguments and returns a hash which details how any given instance of your model is to be represented in JSON.
 
@@ -45,13 +36,9 @@ Pass custom options to #as_json, #to_json, or #serializable_hash and your models
 
 If you wish, you can specify the serializer module to use:
 
-```ruby
-
-class Comment < ApplicationRecord
-  acts_as_cerializable serialize_with: SomeSerializerModule
-end
-
-```
+    class Comment < ApplicationRecord
+      acts_as_cerializable serialize_with: SomeSerializerModule
+    end
 
 
 TODO:
