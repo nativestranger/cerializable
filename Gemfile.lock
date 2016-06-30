@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     cerializable (0.0.1)
-      rails (~> 4.2.6)
+      rails (>= 1.0.0)
 
 GEM
   remote: https://rubygems.org/
