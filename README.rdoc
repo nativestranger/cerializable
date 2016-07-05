@@ -4,6 +4,10 @@ Cerializable provides flexible custom serialization for Rails models.
 
 HOW TO USE
 
+Add Cerializable to your Gemfile
+
+    gem 'cerializable', git: 'git://github.com/nativestranger/cerializable.git', branch: 'master'
+
 Call 'acts_as_cerializable' in the models you wish to use Cerializable with.
 
     class Comment < ApplicationRecord
