@@ -3,8 +3,27 @@ module Cerializable
     extend ActiveSupport::Concern
 
     included do
-      # redefine #serializable_hash to delegate to the serializer object's #run method.
-      # ensure it still supports the :only, :except, and :methods serialization options.
+      # #serializable_hash delegates to the #run method of the model's serializer module.
+      #
+      # It accepts `:only`, `:except`, and `:methods` options which can be passed as a single
+      # symbol ors as an array of symbols. Using both the `:only` and `:except` options will
+      # raise an exception.
+      #
+      # Using the `:only` option will return a hash that only has the specified keys.
+      #
+      #     > comment.serializable_hash(only: :id)
+      #     => { id: 1 }
+      #
+      # Using the `:except` option will return a hash that has all default keys except those specified.
+      #
+      #     > comment.serializable_hash(except: [:id, :user_id])
+      #     => { body: '...sushi?', deleted_at: nil }
+      #
+      # Using the `:methods` option will add keys to the hash for each method specified.
+      #
+      #     > comment.serializable_hash(only: id, methods: :hash])
+      #     => { id: 1, hash: -2535926706119161824 }
+      #
       def serializable_hash(options = {})
         exception_message = "Cannot pass both 'only' & 'except' options to #{ self.class.name.downcase }#serializable_hash."
         raise Exception, exception_message if options[:only] && options[:except]
@@ -37,12 +56,27 @@ module Cerializable
         hash
       end
 
-      # redefine #as_json and #to_json to delegate to #serializable_hash
+      # #as_json delegates to #serializable_hash
       def as_json(options = {}); serializable_hash(options) end
+      # #to_json delegates to #serializable_hash
       def to_json(options = {}); serializable_hash(options) end
     end
 
     module ClassMethods
+      # `acts_as_cerializable` is used to declare that a
+      # model uses Cerializable for serialization.
+      #
+      # Unless a module is specified via the
+      # +serialize_with+ option, the serializer will attempt
+      # to include a module based on the model's name.
+      #
+      # For example, calling +Comment.acts_as_cerializable+ without a +serialize_with+
+      # option will cause Cerializable to look for a +CommentSerializer+ module when
+      # setting up the Comment model's serializer.
+      #
+      # Calling +Comment.acts_as_cerializable+ +serialize_with:+ +MySerializer+
+      # will cause Cerializable to look for a +MySerializer+ module when
+      # setting up the Comment model's serializer.
       def acts_as_cerializable(options = {})
         Cerializable.setup(options.merge(base: self))
       end

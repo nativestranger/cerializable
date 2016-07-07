@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>README - Cerializable</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="project-metadata">
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-label="Page README.rdoc">
+
+<h1 id="label-Cerializable"><a href="Cerializable.html">Cerializable</a><span><a href="#label-Cerializable">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<p><a href="Cerializable.html">Cerializable</a> provides flexible custom
+serialization for Rails models.</p>
+
+<p>HOW TO USE</p>
+
+<p>Add <a href="Cerializable.html">Cerializable</a> to your Gemfile</p>
+
+<pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;cerializable&#39;</span>, <span class="ruby-identifier">git</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;git://github.com/nativestranger/cerializable.git&#39;</span>, <span class="ruby-identifier">branch</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;master&#39;</span>
+</pre>
+
+<p>Call &#39;acts_as_cerializable&#39; in the models you wish to use <a
+href="Cerializable.html">Cerializable</a> with.</p>
+
+<pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">Comment</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">ApplicationRecord</span>
+  <span class="ruby-identifier">acts_as_cerializable</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Define corresponding serializer modules.</p>
+
+<pre class="ruby"><span class="ruby-keyword">module</span> <span class="ruby-constant">CommentSerializer</span>
+
+  <span class="ruby-identifier">include</span> <span class="ruby-constant">ActionView</span><span class="ruby-operator">::</span><span class="ruby-constant">Helpers</span><span class="ruby-operator">::</span><span class="ruby-constant">DateHelper</span>
+
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">run</span>(<span class="ruby-identifier">comment</span>, <span class="ruby-identifier">options</span>)
+    { <span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">id</span>,
+      <span class="ruby-identifier">user</span><span class="ruby-operator">:</span> { <span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>,
+              <span class="ruby-identifier">name</span><span class="ruby-operator">:</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">name</span> },
+      <span class="ruby-identifier">body</span><span class="ruby-operator">:</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">body</span>,
+      <span class="ruby-identifier">ancestorCount</span><span class="ruby-operator">:</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">ancestor_count</span>,
+      <span class="ruby-identifier">childComments</span><span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>[:<span class="ruby-identifier">children</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">child_comments</span>.<span class="ruby-identifier">order</span>(<span class="ruby-identifier">id</span><span class="ruby-operator">:</span> :<span class="ruby-identifier">desc</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">serializable_hash</span> },
+      <span class="ruby-identifier">createdAtInWords</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;#{ time_ago_in_words(comment.created_at) } ago&quot;</span> }
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>The only requirement is that the &#39;run&#39; method accepts two arguments
+and returns a hash which details how any given instance of your model is to
+be represented in JSON.</p>
+
+<p>Pass custom options to as_json, to_json, or serializable_hash and your
+models will use the run method of their serializers to produce the result.</p>
+
+<p>If you wish, you can specify the serializer module to use:</p>
+
+<pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">Comment</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">ApplicationRecord</span>
+  <span class="ruby-identifier">acts_as_cerializable</span> <span class="ruby-identifier">serialize_with</span><span class="ruby-operator">:</span> <span class="ruby-constant">SomeSerializerModule</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>TODO:</p>
+<ul><li>
+<p>Support to_xml</p>
+</li></ul>
+</main>
+
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

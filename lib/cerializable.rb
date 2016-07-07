@@ -3,7 +3,7 @@ require 'cerializable/acts_as_cerializable'
 
 module Cerializable
 
-  def self.setup(options)
+  def self.setup(options) # :nodoc:
     # evaluate code in the context of the base class
     options[:base].class_eval do
 
