@@ -9,9 +9,9 @@ class ActsAsCerializableTest < ActiveSupport::TestCase
   # Ensure both models are serializing their instances as expected
   [Model, AnotherModel].each { |model_class|
 
-    test "#{ model_class.name }#serializer is defined" do
-      assert_equal model_class.send(:serializer).class, Cerializable::Cerializer
-      assert true, model_class.send(:serializer).respond_to?(:run)
+    test "#{ model_class.name }#cerializer is defined" do
+      assert_equal model_class.send(:cerializer).class, Cerializable::Cerializer
+      assert true, model_class.send(:cerializer).respond_to?(:run)
     end
 
     expected_result = model_class.send(:default_json_representation)

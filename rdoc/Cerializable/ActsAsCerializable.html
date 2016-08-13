@@ -114,35 +114,30 @@
        </header>
 
     
-      <div id="method-i-as_json" class="method-detail ">
+      <div id="method-i-as_json" class="method-detail method-alias">
         
         <div class="method-heading">
           <span class="method-name">as_json</span><span
             class="method-args">(options = {})</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
 
         <div class="method-description">
           
-          <p><a href="ActsAsCerializable.html#method-i-as_json">#as_json</a> delegates
-to <a
-href="ActsAsCerializable.html#method-i-serializable_hash">serializable_hash</a></p>
+          
           
           
 
-          
-          <div class="method-source-code" id="as_json-source">
-            <pre><span class="ruby-comment"># File lib/cerializable/acts_as_cerializable.rb, line 60</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">as_json</span>(<span class="ruby-identifier">options</span> = {}); <span class="ruby-identifier">serializable_hash</span>(<span class="ruby-identifier">options</span>) <span class="ruby-keyword">end</span></pre>
-          </div>
           
         </div>
 
         
 
+        
+        <div class="aliases">
+          Alias for: <a href="ActsAsCerializable.html#method-i-serializable_hash">serializable_hash</a>
+        </div>
         
       </div>
 
@@ -162,11 +157,10 @@ href="ActsAsCerializable.html#method-i-serializable_hash">serializable_hash</a><
           
           <p><a
 href="ActsAsCerializable.html#method-i-serializable_hash">serializable_hash</a>
-delegates to the run method of the model&#39;s serializer module.</p>
+delegates to the run method of the model&#39;s &#39;cerializer&#39; object.</p>
 
 <p>It accepts `:only`, `:except`, and `:methods` options which can be passed
-as a single symbol ors as an array of symbols. Using both the `:only` and
-`:except` options will raise an exception.</p>
+as a symbol or as an array of symbols.</p>
 
 <p>Using the `:only` option will return a hash that only has the specified
 keys.</p>
@@ -178,10 +172,15 @@ keys.</p>
 except those specified.</p>
 
 <pre>&gt; comment.serializable_hash(except: [:id, :user_id])
-=&gt; { body: &#39;...sushi?&#39;, deleted_at: nil }</pre>
+=&gt; { body: &#39;...sushi? ;)&#39;, deleted_at: nil }</pre>
 
-<p>Using the `:methods` option will add keys to the hash for each method
+<p>Using the `:methods` option add will add a key and value for each method
 specified.</p>
+
+<p>The key is the method name as a symbol. The value is the return value given
+when calling the method on the model instance.</p>
+
+<p>The :methods option is processed after the :only and :except options.</p>
 
 <pre>&gt; comment.serializable_hash(only: id, methods: :hash])
 =&gt; { id: 1, hash: -2535926706119161824 }</pre>
@@ -190,22 +189,20 @@ specified.</p>
 
           
           <div class="method-source-code" id="serializable_hash-source">
-            <pre><span class="ruby-comment"># File lib/cerializable/acts_as_cerializable.rb, line 27</span>
+            <pre><span class="ruby-comment"># File lib/cerializable/acts_as_cerializable.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">serializable_hash</span>(<span class="ruby-identifier">options</span> = {})
-  <span class="ruby-identifier">exception_message</span> = <span class="ruby-node">&quot;Cannot pass both &#39;only&#39; &amp; &#39;except&#39; options to #{ self.class.name.downcase }#serializable_hash.&quot;</span>
-  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Exception</span>, <span class="ruby-identifier">exception_message</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:only</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:except</span>]
-
   [<span class="ruby-value">:only</span>, <span class="ruby-value">:except</span>, <span class="ruby-value">:methods</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">option_name</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">option_is_array</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">option_name</span>].<span class="ruby-identifier">class</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Array</span>)
-    <span class="ruby-identifier">option_is_symbol</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">option_name</span>].<span class="ruby-identifier">class</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Symbol</span>)
-    <span class="ruby-identifier">invalid_option_passed</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">option_name</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">option_is_array</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">option_is_symbol</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Exception</span>, <span class="ruby-node">&quot;&#39;#{ option_name }&#39; option must be of an Array or Symbol class.&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">invalid_option_passed</span>
+    <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:option_name</span>].<span class="ruby-identifier">nil?</span>
+
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:option_name</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:option_name</span>].<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">Exception</span>, <span class="ruby-node">&quot;&#39;#{ option_name }&#39; option must be of an Array or Symbol class.&quot;</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-comment"># serialize the instance using the class&#39;s serializer object.</span>
-  <span class="ruby-identifier">hash</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">serializer</span>.<span class="ruby-identifier">run</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">options</span>)
+  <span class="ruby-comment"># serialize the instance using the class&#39;s cerializer object.</span>
+  <span class="ruby-identifier">hash</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">cerializer</span>.<span class="ruby-identifier">run</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">options</span>)
 
-  <span class="ruby-comment"># now, alter the hash according to the :only, :except, and :methods serialization options.</span>
+  <span class="ruby-comment"># alter the hash according to the :only, :except, and :methods serialization options.</span>
   <span class="ruby-identifier">ensure_is_array</span> = <span class="ruby-identifier">proc</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">arg</span><span class="ruby-operator">|</span> <span class="ruby-identifier">arg</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">arg</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-identifier">arg</span>) }
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">except_options</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:except</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ensure_is_array</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:except</span>])
@@ -217,7 +214,7 @@ specified.</p>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">methods_options</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:methods</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ensure_is_array</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:methods</span>])
-    <span class="ruby-identifier">methods_options</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">method_name</span><span class="ruby-operator">|</span> <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">method_name</span>] = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">method_name</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">method_name</span>] }
+    <span class="ruby-identifier">methods_options</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">method_name</span><span class="ruby-operator">|</span> <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">method_name</span>] = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">method_name</span>) }
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-identifier">hash</span>
@@ -227,40 +224,39 @@ specified.</p>
         </div>
 
         
+        <div class="aliases">
+          Also aliased as: <a href="ActsAsCerializable.html#method-i-as_json">as_json</a>, <a href="ActsAsCerializable.html#method-i-to_json">to_json</a>
+        </div>
+        
 
         
       </div>
 
     
-      <div id="method-i-to_json" class="method-detail ">
+      <div id="method-i-to_json" class="method-detail method-alias">
         
         <div class="method-heading">
           <span class="method-name">to_json</span><span
             class="method-args">(options = {})</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
           
         </div>
         
 
         <div class="method-description">
           
-          <p><a href="ActsAsCerializable.html#method-i-to_json">#to_json</a> delegates
-to <a
-href="ActsAsCerializable.html#method-i-serializable_hash">serializable_hash</a></p>
+          
           
           
 
-          
-          <div class="method-source-code" id="to_json-source">
-            <pre><span class="ruby-comment"># File lib/cerializable/acts_as_cerializable.rb, line 62</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_json</span>(<span class="ruby-identifier">options</span> = {}); <span class="ruby-identifier">serializable_hash</span>(<span class="ruby-identifier">options</span>) <span class="ruby-keyword">end</span></pre>
-          </div>
           
         </div>
 
         
 
+        
+        <div class="aliases">
+          Alias for: <a href="ActsAsCerializable.html#method-i-serializable_hash">serializable_hash</a>
+        </div>
         
       </div>
 

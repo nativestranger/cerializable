@@ -116,26 +116,24 @@
 href="../../Cerializable.html">Cerializable</a> for serialization.</p>
 
 <p>Unless a module is specified via the <code>serialize_with</code> option,
-the serializer will attempt to include a module based on the model&#39;s
-name.</p>
+the base model&#39;s cerializer will attempt to include a module based on
+the model&#39;s name.</p>
 
 <p>For example, calling <code>Comment.acts_as_cerializable</code> without a
 <code>serialize_with</code> option will cause <a
 href="../../Cerializable.html">Cerializable</a> to look for a
-<code>CommentSerializer</code> module when setting up the Comment
-model&#39;s serializer.</p>
+<code>CommentSerializer</code>.</p>
 
 <p>Calling <code>Comment.acts_as_cerializable</code>
 <code>serialize_with:</code> <code>MySerializer</code> will cause <a
 href="../../Cerializable.html">Cerializable</a> to look for a
-<code>MySerializer</code> module when setting up the Comment model&#39;s
-serializer.</p>
+<code>MySerializer</code> instead.</p>
           
           
 
           
           <div class="method-source-code" id="acts_as_cerializable-source">
-            <pre><span class="ruby-comment"># File lib/cerializable/acts_as_cerializable.rb, line 80</span>
+            <pre><span class="ruby-comment"># File lib/cerializable/acts_as_cerializable.rb, line 78</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">acts_as_cerializable</span>(<span class="ruby-identifier">options</span> = {})
   <span class="ruby-constant">Cerializable</span>.<span class="ruby-identifier">setup</span>(<span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">base</span><span class="ruby-operator">:</span> <span class="ruby-keyword">self</span>))
 <span class="ruby-keyword">end</span></pre>
