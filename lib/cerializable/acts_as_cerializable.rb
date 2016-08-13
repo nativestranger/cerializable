@@ -30,9 +30,9 @@ module Cerializable
       #
       def serializable_hash(options = {})
         [:only, :except, :methods].each do |option_name|
-          break if options[:option_name].nil?
+          next if options[option_name].nil?
 
-          unless options[:option_name].is_a?(Symbol) || options[:option_name].is_a?(Array)
+          unless options[option_name].is_a?(Symbol) || options[option_name].is_a?(Array)
             raise Exception, "'#{ option_name }' option must be of an Array or Symbol class."
           end
         end
