@@ -63,39 +63,39 @@ You can also pass in custom options that your serializer modules make use of.
 
 For example, the class below allows us to build a comment thread's hierarchy without making queries for each comment's children:
 
-class CommentTreeService
+  class CommentTreeService
 
-  def initialize
-    @comments_hash = {}
-    @result = []
+    def initialize
+      @comments_hash = {}
+      @result = []
 
-    @children_resolver = proc do |parent_comment|
-      children_array = []
+      @children_resolver = proc do |parent_comment|
+        children_array = []
+        @comments_hash.each_pair do |id, comment|
+          if comment.parent_type == 'Comment' && comment.parent_id == parent_comment.id
+            @comments_hash.delete(id)
+            children_array << comment.serializable_hash(children: @children_resolver.call(comment))
+          end
+        end
+        children_array
+      end
+    end
+
+    def for_thread(comment_thread, options = { order: { ancestor_count: :asc, id: :desc } })
+      comment_thread.comments.includes(:user)
+        .order(options[:order]).each { |comment| @comments_hash[comment.id] = comment }
+
       @comments_hash.each_pair do |id, comment|
-        if comment.parent_type == 'Comment' && comment.parent_id == parent_comment.id
+        if comment.parent_type == 'CommentThread'
           @comments_hash.delete(id)
-          children_array << comment.serializable_hash(children: @children_resolver.call(comment))
+          @result << comment.serializable_hash(children: @children_resolver.call(comment))
         end
       end
-      children_array
-    end
-  end
 
-  def for_thread(comment_thread, options = { order: { ancestor_count: :asc, id: :desc } })
-    comment_thread.comments.includes(:user)
-      .order(options[:order]).each { |comment| @comments_hash[comment.id] = comment }
-
-    @comments_hash.each_pair do |id, comment|
-      if comment.parent_type == 'CommentThread'
-        @comments_hash.delete(id)
-        @result << comment.serializable_hash(children: @children_resolver.call(comment))
-      end
+      @result
     end
 
-    @result
   end
-
-end
 
 TODO:
 
