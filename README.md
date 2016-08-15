@@ -2,23 +2,23 @@
 
 Custom serialization for Rails models.
 
-Add Cerializable to your Gemfile
+Add Cerializable to your Gemfile:
 
     gem 'cerializable', '~> 0.0.2'
 
-Call 'acts_as_cerializable' in the models you wish to use Cerializable with.
+Call 'acts_as_cerializable' in the models you wish to use Cerializable with:
 
     class Comment < ApplicationRecord
       acts_as_cerializable
     end
 
-Define corresponding serializer modules.
+Define corresponding serializer modules:
 
     module CommentSerializer
 
       def run(comment, options)
         { id: comment.id,
-          user_id: comment.user.id,
+          user_id: comment.user_id,
           body: comment.body,
           ancestorCount: comment.ancestor_count,
           childComments: options[:children] || comment.child_comments.map { |c| c.serializable_hash }
@@ -40,12 +40,12 @@ Your model's #as_json, #to_json, and #serializable_hash methods will use the #ru
 They accept `:only`, `:except`, and `:methods` options which can be passed as a
 symbol or as an array of symbols.
 
-Using the `:only` option will return a hash that only has the specified keys.
+Using the `:only` option will return a hash that only has the specified keys:
 
     > comment.serializable_hash(only: :id)
     => { id: 1 }
 
-Using the `:except` option will return a hash that has all default keys except those specified.
+Using the `:except` option will return a hash that has all default keys except those specified:
 
     > comment.serializable_hash(except: [:user_id, :ancestorCount, :childComments])
     => { id: 1, body: '...sushi? ' }
@@ -54,7 +54,7 @@ Using the `:methods` option add will add a key and value for each method specifi
 
 The key is the method name and the value is the return value given when calling the method on the model instance.
 
-The :methods option is processed after the `:only` and `:except` options.
+The `:methods` option is processed after the `:only` and `:except` options:
 
     > comment.serializable_hash(only: id, methods: :hash])
     => { id: 1, hash: -2535926706119161824 }
@@ -82,7 +82,7 @@ For example, the class below allows us to build a comment thread's hierarchy wit
     end
 
     def for_thread(comment_thread, options = { order: { ancestor_count: :asc, id: :desc } })
-      comment_thread.comments.includes(:user)
+      comment_thread.comments
         .order(options[:order]).each { |comment| @comments_hash[comment.id] = comment }
 
       @comments_hash.each_pair do |id, comment|
