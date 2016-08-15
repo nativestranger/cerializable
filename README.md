@@ -1,4 +1,4 @@
-= Cerializable
+# Cerializable
 
 Custom serialization for Rails models.
 
