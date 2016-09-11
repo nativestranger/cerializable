@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cerializable (0.0.2)
+    cerializable (0.1.0)
       rails (>= 1.0.0)
 
 GEM

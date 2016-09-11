@@ -3,19 +3,19 @@ module Cerializable
     extend ActiveSupport::Concern
 
     included do
-      # #serializable_hash delegates to the #run method of the model's 'cerializer' object.
+      # #cerializable_hash delegates to the #run method of the model's 'cerializer' object.
       #
       # It accepts `:only`, `:except`, and `:methods` options which can be passed as a
       # symbol or as an array of symbols.
       #
       # Using the `:only` option will return a hash that only has the specified keys.
       #
-      #     > comment.serializable_hash(only: :id)
+      #     > comment.cerializable_hash(only: :id)
       #     => { id: 1 }
       #
       # Using the `:except` option will return a hash that has all default keys except those specified.
       #
-      #     > comment.serializable_hash(except: [:id, :user_id])
+      #     > comment.cerializable_hash(except: [:id, :user_id])
       #     => { body: '...sushi? ;)', deleted_at: nil }
       #
       # Using the `:methods` option add will add a key and value for each method specified.
@@ -25,10 +25,10 @@ module Cerializable
       #
       # The :methods option is processed after the :only and :except options.
       #
-      #     > comment.serializable_hash(only: id, methods: :hash])
+      #     > comment.cerializable_hash(only: id, methods: :hash])
       #     => { id: 1, hash: -2535926706119161824 }
       #
-      def serializable_hash(options = {})
+      def cerializable_hash(options = {})
         [:only, :except, :methods].each do |option_name|
           next if options[option_name].nil?
 
@@ -58,8 +58,6 @@ module Cerializable
         hash
       end
 
-      alias :as_json :serializable_hash
-      alias :to_json :serializable_hash
     end
 
     module ClassMethods

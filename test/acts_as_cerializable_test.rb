@@ -15,36 +15,34 @@ class ActsAsCerializableTest < ActiveSupport::TestCase
     end
 
     expected_result = model_class.send(:default_json_representation)
-    [:serializable_hash, :as_json, :to_json].each do |method_name|
 
-      test "#{ model_class.name.downcase }##{ method_name } works as expected" do
-        instance = model_class.send(:new)
+    test "#{ model_class.name.downcase }cerializable_hash works as expected" do
+      instance = model_class.new
 
-        assert_equal instance.send(method_name), expected_result
+      assert_equal instance.cerializable_hash, expected_result
 
-        # except option
-        assert_equal instance.send(method_name, except: :arbitraryKey1), expected_result.except(:arbitraryKey1)
+      # except option
+      assert_equal instance.cerializable_hash(except: :arbitraryKey1), expected_result.except(:arbitraryKey1)
 
-        assert_equal instance.send(method_name, except: [:arbitraryKey1, :arbitraryKey2]),
-                     expected_result.except(:arbitraryKey1, :arbitraryKey2)
+      assert_equal instance.cerializable_hash(except: [:arbitraryKey1, :arbitraryKey2]),
+                   expected_result.except(:arbitraryKey1, :arbitraryKey2)
 
-        # only option
-        assert_equal instance.send(method_name, only: :arbitraryKey1), expected_result.slice(:arbitraryKey1)
+      # only option
+      assert_equal instance.cerializable_hash(only: :arbitraryKey1), expected_result.slice(:arbitraryKey1)
 
-        assert_equal instance.send(method_name, only: [:arbitraryKey1, :arbitraryKey2]),
-                     expected_result.slice(:arbitraryKey1, :arbitraryKey2)
+      assert_equal instance.cerializable_hash(only: [:arbitraryKey1, :arbitraryKey2]),
+                   expected_result.slice(:arbitraryKey1, :arbitraryKey2)
 
-        # method option
-        assert_equal instance.send(method_name, methods: :object_id),
-                     expected_result.merge(object_id: instance.object_id)
+      # method option
+      assert_equal instance.cerializable_hash(methods: :object_id),
+                   expected_result.merge(object_id: instance.object_id)
 
-        assert_equal instance.send(method_name, methods: [:object_id, :hash]),
-                     expected_result.merge(object_id: instance.object_id, hash: instance.hash)
+      assert_equal instance.cerializable_hash(methods: [:object_id, :hash]),
+                   expected_result.merge(object_id: instance.object_id, hash: instance.hash)
 
-        # custom option
-        assert_equal instance.send(method_name, custom_option: true),
-                     expected_result.merge(customOption: '( ͡° ͜ʖ ͡°)')
-      end
+      # custom option
+      assert_equal instance.cerializable_hash(custom_option: true),
+                   expected_result.merge(customOption: '( ͡° ͜ʖ ͡°)')
     end
 
   }
