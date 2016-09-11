@@ -64,7 +64,7 @@ The `:methods` option is processed after the `:only` and `:except` options:
     > comment.cerializable_hash(only: id, methods: :hash])
     => { id: 1, hash: -2535926706119161824 }
 
-# Custom Serialization Options
+## Custom Serialization Options
 
 You can pass in custom options that your serializer modules make use of.
 
