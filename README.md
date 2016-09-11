@@ -2,11 +2,15 @@
 
 Plain old Ruby serialization for Rails models.
 
+## Installation
+
 Add Cerializable to your Gemfile:
 
     gem 'cerializable', '~> 0.1.0'
 
-Call 'acts_as_cerializable' in the models you wish to use Cerializable with:
+## Usage
+
+Call `acts_as_cerializable` in the models you wish to use Cerializable with:
 
     class Comment < ApplicationRecord
       acts_as_cerializable
@@ -32,11 +36,11 @@ If you wish, you can specify a serializer module to use:
       acts_as_cerializable serialize_with: SomeSerializerModule
     end
 
-In these serializer modules, you can define methods and include other modules without polluting their corresponding models.
+In these serializer modules, you can define methods and include other modules without polluting the corresponding models.
 
-The only requirement is that the serializer modules have a 'run' method which accepts two arguments and returns a hash detailing how instances of your model should be serialized.
+The only requirement is that the serializer modules have a `run` method which accepts two arguments and returns a hash detailing how instances of your model should be serialized.
 
-Your model's #cerializable_hash methods will use the #run method of their serializers to produce their results.
+Your model's `cerializable_hash` methods will use the `run` method of their serializers to produce their results.
 
 Like `serializable_hash`, `cerializable_hash` accepts `:only`, `:except`, and `:methods` options which can be passed as a
 symbol or as an array of symbols.
@@ -60,11 +64,13 @@ The `:methods` option is processed after the `:only` and `:except` options:
     > comment.cerializable_hash(only: id, methods: :hash])
     => { id: 1, hash: -2535926706119161824 }
 
-You can also pass in custom options that your serializer modules make use of.
+# Custom Serialization Options
+
+You can pass in custom options that your serializer modules make use of.
 
 Common use cases for custom options might be for handling roles or versions.
 
-In the example serializer above, we're using a custom `children` option.
+In the example serializer above, we're using a custom `:children` option.
 
 This allows us to build a comment thread's hierarchy without querying for each comment's children:
 
