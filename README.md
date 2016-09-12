@@ -1,12 +1,16 @@
 # Cerializable
 
-Custom serialization for Rails models.
+Plain old Ruby serialization for Rails models.
+
+## Installation
 
 Add Cerializable to your Gemfile:
 
-    gem 'cerializable', '~> 0.0.2'
+    gem 'cerializable', '~> 0.1.0'
 
-Call 'acts_as_cerializable' in the models you wish to use Cerializable with:
+## Usage
+
+Call `acts_as_cerializable` in the models you wish to use Cerializable with:
 
     class Comment < ApplicationRecord
       acts_as_cerializable
@@ -18,10 +22,10 @@ Define corresponding serializer modules:
 
       def run(comment, options)
         { id: comment.id,
-          user_id: comment.user_id,
+          userId: comment.user_id,
           body: comment.body,
           ancestorCount: comment.ancestor_count,
-          childComments: options[:children] || comment.child_comments.map { |c| c.serializable_hash }
+          childComments: options[:children] || comment.child_comments.map { |c| c.cerializable_hash }
       end
 
     end
@@ -32,22 +36,23 @@ If you wish, you can specify a serializer module to use:
       acts_as_cerializable serialize_with: SomeSerializerModule
     end
 
+In these serializer modules, you can define methods and include other modules without polluting the corresponding models.
 
-The only requirement is that the serializer modules have a 'run' method which accepts two arguments and returns a hash detailing how instances of your model should be serialized.
+The only requirement is that the serializer modules have a `run` method which accepts two arguments and returns a hash detailing how instances of your model should be serialized.
 
-Your model's #as_json, #to_json, and #serializable_hash methods will use the #run method of their serializer to produce their results.
+Your model's `cerializable_hash` methods will use the `run` method of their serializers to produce their results.
 
-They accept `:only`, `:except`, and `:methods` options which can be passed as a
+Like `serializable_hash`, `cerializable_hash` accepts `:only`, `:except`, and `:methods` options which can be passed as a
 symbol or as an array of symbols.
 
 Using the `:only` option will return a hash that only has the specified keys:
 
-    > comment.serializable_hash(only: :id)
+    > comment.cerializable_hash(only: :id)
     => { id: 1 }
 
 Using the `:except` option will return a hash that has all default keys except those specified:
 
-    > comment.serializable_hash(except: [:user_id, :ancestorCount, :childComments])
+    > comment.cerializable_hash(except: [:user_id, :ancestorCount, :childComments])
     => { id: 1, body: '...sushi? ' }
 
 Using the `:methods` option add will add a key and value for each method specified.
@@ -56,47 +61,54 @@ The key is the method name and the value is the return value given when calling 
 
 The `:methods` option is processed after the `:only` and `:except` options:
 
-    > comment.serializable_hash(only: id, methods: :hash])
+    > comment.cerializable_hash(only: id, methods: :hash])
     => { id: 1, hash: -2535926706119161824 }
 
-You can also pass in custom options that your serializer modules make use of.
+## Custom Serialization Options
 
-For example, the class below allows us to build a comment thread's hierarchy without making queries for each comment's children:
+You can pass in custom options that your serializer modules make use of.
 
-  class CommentTreeService
+Common use cases for custom options might be for handling roles or versions.
 
-    def initialize
-      @comments_hash = {}
-      @result = []
+In the example serializer above, we're using a custom `:children` option.
 
-      @children_resolver = proc do |parent_comment|
-        children_array = []
+This allows us to build a comment thread's hierarchy without querying for each comment's children:
+
+    class CommentTreeService
+      def self.call(comment_thread, options = { order: { ancestor_count: :asc, id: :desc } })
+        self.new.for_thread(comment_thread, options)
+      end
+
+      def initialize
+        @comments_hash = {}
+        @result = []
+
+        @children_resolver = proc do |parent_comment|
+          children_array = []
+
+          @comments_hash.each_pair do |id, comment|
+            if comment.parent_type == 'Comment' && comment.parent_id == parent_comment.id
+              @comments_hash.delete(id)
+              children_array << comment.cerializable_hash(children: @children_resolver.call(comment))
+            end
+          end
+
+          children_array
+        end
+      end
+
+      def for_thread(comment_thread, options)
+        comment_thread.comments
+          .order(options[:order])
+          .each { |comment| @comments_hash[comment.id] = comment }
+
         @comments_hash.each_pair do |id, comment|
-          if comment.parent_type == 'Comment' && comment.parent_id == parent_comment.id
+          if comment.parent_type == 'CommentThread'
             @comments_hash.delete(id)
-            children_array << comment.serializable_hash(children: @children_resolver.call(comment))
+            @result << comment.cerializable_hash(children: @children_resolver.call(comment))
           end
         end
-        children_array
+
+        @result
       end
     end
-
-    def for_thread(comment_thread, options = { order: { ancestor_count: :asc, id: :desc } })
-      comment_thread.comments
-        .order(options[:order]).each { |comment| @comments_hash[comment.id] = comment }
-
-      @comments_hash.each_pair do |id, comment|
-        if comment.parent_type == 'CommentThread'
-          @comments_hash.delete(id)
-          @result << comment.serializable_hash(children: @children_resolver.call(comment))
-        end
-      end
-
-      @result
-    end
-
-  end
-
-TODO:
-
-* Support #to_xml

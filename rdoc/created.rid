@@ -1,6 +1,0 @@
-Sat, 13 Aug 2016 00:19:40 -0400
-README.rdoc	Tue, 05 Jul 2016 01:07:58 -0400
-lib/cerializable.rb	Sat, 13 Aug 2016 00:12:11 -0400
-lib/cerializable/acts_as_cerializable.rb	Sat, 13 Aug 2016 00:07:47 -0400
-lib/cerializable/cerializer.rb	Tue, 05 Jul 2016 04:11:55 -0400
-lib/cerializable/version.rb	Wed, 29 Jun 2016 02:54:02 -0400
