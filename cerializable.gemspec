@@ -21,4 +21,5 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.2.2'
 
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "appraisal"
 end
