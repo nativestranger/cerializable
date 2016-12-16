@@ -2,6 +2,10 @@
 
 Plain old Ruby serialization for Rails models.
 
+## Code Status
+
+[![Build Status](https://travis-ci.org/nativestranger/cerializable.svg?branch=master)](https://travis-ci.org/nativestranger/cerializable)
+
 Rather than using something like jbuilder, you could use cerializable to generate hashes for your model instances and then render the hashes as JSON. This can aid in performance.
 
 It also gives you the option to customize the process via custom serialization options.
