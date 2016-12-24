@@ -2,7 +2,6 @@ PATH
   remote: .
   specs:
     cerializable (0.1.0)
-      rails (>= 4.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -119,7 +118,8 @@ PLATFORMS
 DEPENDENCIES
   appraisal
   cerializable!
+  rails (>= 4.1.0)
   sqlite3
 
 BUNDLED WITH
-   1.11.2
+   1.13.2

@@ -7,7 +7,7 @@ class ActsAsCerializableTest < ActiveSupport::TestCase
   end
 
   # Ensure both models are serializing their instances as expected
-  [Model, AnotherModel].each { |model_class|
+  [Model, AnotherModel, SomePoroClass].each { |model_class|
 
     test "#{ model_class.name }#cerializer is defined" do
       assert_equal model_class.send(:cerializer).class, Cerializable::Cerializer

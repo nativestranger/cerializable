@@ -10,16 +10,16 @@ Gem::Specification.new do |s|
   s.authors     = ["Eric Arnold"]
   s.email       = ["eric.ed.arnold@gmail.com"]
   s.homepage    = "https://github.com/nativestranger/cerializable"
-  s.summary     = "Flexible custom serialization for Rails models"
-  s.description = "Flexible custom serialization for Rails models."
+  s.summary     = "Flexible custom serialization for Ruby objects"
+  s.description = "Flexible custom serialization for Ruby objects."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", '>= 4.1.0'
   s.required_ruby_version = '>= 2.2.2'
 
+  s.add_development_dependency "rails", '>= 4.1.0'
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "appraisal"
 end
