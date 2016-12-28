@@ -1,5 +1,5 @@
 module Cerializable
-  module ActsAsCerializable
+  module Model
 
     def self.included(base)
       base.extend ClassMethods
@@ -77,6 +77,13 @@ module Cerializable
       # Calling +Comment.acts_as_cerializable+ +serialize_with:+ +MySerializer+
       # will cause Cerializable to look for a +MySerializer+ instead.
       def acts_as_cerializable(options = {})
+        message = "'acts_as_cerializable' is deprecated and will be \
+        removed from Cerializable in v1.0.0. Use 'cerializable' instead."
+        Kernel.warn message
+        cerializable(options)
+      end
+
+      def cerializable(options = {})
         Cerializable.setup(options.merge(base: self))
       end
     end
@@ -85,5 +92,5 @@ module Cerializable
 end
 
 if defined?(ActiveRecord::Base)
-  ActiveRecord::Base.send :include, Cerializable::ActsAsCerializable
+  ActiveRecord::Base.send :include, Cerializable::Model
 end

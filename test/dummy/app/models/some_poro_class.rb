@@ -1,5 +1,5 @@
 class SomePoroClass
-  include Cerializable::ActsAsCerializable
+  include Cerializable::Model
   acts_as_cerializable
 
   # this is here just to make testing easier
