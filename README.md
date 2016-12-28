@@ -1,6 +1,6 @@
 # Cerializable
 
-Plain old Ruby serialization for Rails models.
+Plain old Ruby serialization for Ruby objects.
 
 ## Code Status
 
@@ -12,16 +12,18 @@ It also gives you the option to customize the process via custom serialization o
 
 ## Installation
 
-Add Cerializable to your Gemfile:
+For use with ActiveRecord, simply add cerializable to your Gemfile:
 
-    gem 'cerializable', '~> 0.1.0'
+    gem 'cerializable', '~> 0.2.0'
+
+For other ORMs, you'll also need to include `Cerializable::Model` in your ORM's base class.
 
 ## Usage
 
-Call `acts_as_cerializable` in the models you wish to use Cerializable with:
+Call `cerializable` in the models you wish to use Cerializable with:
 
     class Comment < ApplicationRecord
-      acts_as_cerializable
+      cerializable
     end
 
 Define corresponding serializer modules:
@@ -41,7 +43,7 @@ Define corresponding serializer modules:
 If you wish, you can specify a serializer module to use:
 
     class Comment < ApplicationRecord
-      acts_as_cerializable serialize_with: SomeSerializerModule
+      cerializable serialize_with: SomeSerializerModule
     end
 
 In these serializer modules, you can define methods and include other modules without polluting the corresponding models.

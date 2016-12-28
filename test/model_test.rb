@@ -1,13 +1,17 @@
 require 'test_helper'
 
-class ActsAsCerializableTest < ActiveSupport::TestCase
+class ModelTest < ActiveSupport::TestCase
 
   test "ActiveRecord::Base#acts_as_cerializable" do
     assert true, ActiveRecord::Base.respond_to?(:acts_as_cerializable)
   end
 
+  test "ActiveRecord::Base#cerializable" do
+    assert true, ActiveRecord::Base.respond_to?(:cerializable)
+  end
+
   # Ensure both models are serializing their instances as expected
-  [Model, AnotherModel].each { |model_class|
+  [Model, AnotherModel, SomePoroClass].each { |model_class|
 
     test "#{ model_class.name }#cerializer is defined" do
       assert_equal model_class.send(:cerializer).class, Cerializable::Cerializer

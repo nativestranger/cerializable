@@ -14,8 +14,8 @@ class CerializableTest < ActiveSupport::TestCase
     assert_kind_of Class, Cerializable::Cerializer
   end
 
-  test "Cerializable::ActsAsCerializable is defined" do
-    assert_kind_of Module, Cerializable::ActsAsCerializable
+  test "Cerializable::Model is defined" do
+    assert_kind_of Module, Cerializable::Model
   end
 
 end

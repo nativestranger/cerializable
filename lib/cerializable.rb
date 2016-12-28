@@ -1,5 +1,5 @@
 require 'cerializable/cerializer'
-require 'cerializable/acts_as_cerializable'
+require 'cerializable/model'
 
 module Cerializable
 
