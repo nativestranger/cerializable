@@ -14,7 +14,7 @@ It also gives you the option to customize the process via custom serialization o
 
 For use with ActiveRecord, simply add cerializable to your Gemfile:
 
-    gem 'cerializable', '~> 0.1.0'
+    gem 'cerializable', '~> 0.2.0'
 
 For other ORMs, you'll also need to include `Cerializable::Model` in your ORM's base class.
 
