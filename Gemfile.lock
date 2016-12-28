@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cerializable (0.1.0)
+    cerializable (0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -122,4 +122,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.13.2
+   1.13.7
