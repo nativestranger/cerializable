@@ -11,3 +11,5 @@ test/dummy/.sass-cache
 gemfiles/*.*.lock
 
 vendor/
+
+coverage
