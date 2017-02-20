@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.org/nativestranger/cerializable.svg?branch=master)](https://travis-ci.org/nativestranger/cerializable)
 
+[![Code Climate](https://codeclimate.com/github/nativestranger/cerializable/badges/gpa.svg)](https://codeclimate.com/github/nativestranger/cerializable)
+
+[![Issue Count](https://codeclimate.com/github/nativestranger/cerializable/badges/issue_count.svg)](https://codeclimate.com/github/nativestranger/cerializable)
+
+[![Test Coverage](https://codeclimate.com/github/nativestranger/cerializable/badges/coverage.svg)](https://codeclimate.com/github/nativestranger/cerializable/coverage)
+
 Plain old Ruby serialization.
 
 Rather than using something like jbuilder, you could use cerializable to generate hashes for your model instances and then render the hashes as JSON. This can aid in performance.
