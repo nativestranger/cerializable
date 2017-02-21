@@ -45,15 +45,18 @@ module Cerializable
           # alter the hash according to the :only, :except, and :methods serialization options.
           ensure_is_array = proc { |arg| arg.class.ancestors.include?(Array) ? arg : Array.new(1, arg) }
 
-          if except_options = options[:except] && ensure_is_array.call(options[:except])
+          if options[:except]
+            except_options = ensure_is_array.call(options[:except])
             except_options.each { |key| hash.delete(key) }
           end
 
-          if only_options = options[:only] && ensure_is_array.call(options[:only])
+          if options[:only]
+            only_options = ensure_is_array.call(options[:only])
             hash.keys.each { |key| hash.delete(key) unless only_options.include?(key) }
           end
 
-          if methods_options = options[:methods] && ensure_is_array.call(options[:methods])
+          if options[:methods]
+            methods_options = ensure_is_array.call(options[:methods])
             methods_options.each { |method_name| hash[method_name] = self.send(method_name) }
           end
 

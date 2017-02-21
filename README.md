@@ -2,7 +2,7 @@
 
 [travis]: https://travis-ci.org/nativestranger/cerializable
 [codeclimate]: https://codeclimate.com/github/nativestranger/cerializable
-[issuecount]: https://codeclimate.com/github/nativestranger/cerializable
+[issuecount]: https://codeclimate.com/github/nativestranger/cerializable/issues
 [testcoverage]: https://codeclimate.com/github/nativestranger/cerializable/coverage
 
 [![Build Status](https://travis-ci.org/nativestranger/cerializable.svg?branch=master)][travis]
